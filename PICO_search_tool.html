@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PICO Search Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      background: #f9f9f9;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #0077cc;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #questionBox {
+      margin-top: 30px;
+      padding: 15px;
+      border-left: 4px solid #0077cc;
+      background: #eef7ff;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>PICO Search Tool</h2>
+
+  <label for="patient">P: Patient / Problem / Population</label>
+  <input type="text" id="patient" placeholder="e.g., adults with type 2 diabetes">
+
+  <label for="intervention">I: Intervention</label>
+  <input type="text" id="intervention" placeholder="e.g., metformin">
+
+  <label for="comparison">C: Comparison (optional)</label>
+  <input type="text" id="comparison" placeholder="e.g., sulfonylureas">
+
+  <label for="outcome">O: Outcome</label>
+  <input type="text" id="outcome" placeholder="e.g., reduction in HbA1c levels">
+
+  <button onclick="submitPICO()">Search with PICO</button>
+
+  <div id="questionBox" style="display:none;"></div>
+
+  <script>
+    function submitPICO() {
+      const p = document.getElementById('patient').value.trim();
+      const i = document.getElementById('intervention').value.trim();
+      const c = document.getElementById('comparison').value.trim();
+      const o = document.getElementById('outcome').value.trim();
+
+      if (!p || !i || !o) {
+        alert("Please enter at least Patient, Intervention, and Outcome.");
+        return;
+      }
+
+      const clinicalQuestion = `In ${p}, is ${i}` + (c ? ` more effective than ${c}` : '') + ` in achieving ${o}?`;
+      const query = `${p} AND ${i}` + (c ? ` AND ${c}` : '') + ` AND ${o}`;
+
+      document.getElementById('questionBox').style.display = 'block';
+      document.getElementById('questionBox').innerHTML = `<strong>Clinical Question:</strong> ${clinicalQuestion}`;
+
+      // Open PubMed search in new tab
+      const pubmedURL = `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(query)}`;
+      window.open(pubmedURL, '_blank');
+
+      // Log for ChatGPT search integration (placeholder)
+      console.log("Send to ChatGPT: ", clinicalQuestion);
+    }
+  </script>
+</body>
+</html>
